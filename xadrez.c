@@ -1,73 +1,100 @@
 #include <stdio.h>
 
-// Desafio: Nível Aventureiro
-// Movimentando o Cavalo
+// Desafio: Nível Mestre
+// Criando Movimentos Complexos
 // Aluno: Vinícius Silva (BrokeNz7)
 
-
-// Constantes para quantidade de casas que cada peça se move
+// Constantes para quantidade de casas
 #define MOV_BISPO 5    // Bispo: 5 casas na diagonal superior direita
 #define MOV_TORRE 5    // Torre: 5 casas para a direita
 #define MOV_RAINHA 8   // Rainha: 8 casas para a esquerda
-#define MOV_CAVALO_VERTICAL 2   // Cavalo: 2 casas para baixo
-#define MOV_CAVALO_HORIZONTAL 1 // Cavalo: 1 casa para a esquerda (por vez)
 
-int main() {
-    int i; // Variável de controle externa
+// =============================================
+// FUNÇÕES RECURSIVAS (Torre, Rainha)
+// =============================================
+void mover_torre(int casas) {
+    if (casas <= 0) return;
+    printf("Direita\n");
+    mover_torre(casas - 1);
+}
 
-    // =============================================
-    // 1. Movimentação do BISPO (diagonal superior direita) - reaproveitado
-    // =============================================
-    printf("=== Movimentacao do Bispo (5 casas - diagonal superior direita) ===\n");
-    for (i = 0; i < MOV_BISPO; i++) {
+void mover_rainha(int casas) {
+    if (casas <= 0) return;
+    printf("Esquerda\n");
+    mover_rainha(casas - 1);
+}
+
+// =============================================
+// BISPO: Loops aninhados (externo vertical, interno horizontal)
+// =============================================
+void mover_bispo_loops() {
+    int vertical, horizontal;
+
+    printf("\n=== Movimentacao do Bispo (5 casas - diagonal superior direita) ===\n");
+    for (vertical = 0; vertical < MOV_BISPO; vertical++) {        // Loop externo: vertical (Cima)
         printf("Cima\n");
-        printf("Direita\n");
+
+        for (horizontal = 0; horizontal < 1; horizontal++) {       // Loop interno: horizontal (Direita)
+            printf("Direita\n");
+        }
     }
+}
 
-    // =============================================
-    // 2. Movimentação da TORRE (5 casas para a direita) - reaproveitado
-    // =============================================
-    printf("\n=== Movimentacao da Torre (5 casas - direita) ===\n");
-    i = 0;
-    while (i < MOV_TORRE) {
-        printf("Direita\n");
-        i++;
-    }
+// =============================================
+// CAVALO: Loops aninhados com múltiplas variáveis + continue/break
+// Movimento em L: 2 casas para cima + 1 casa para a direita
+// =============================================
+void mover_cavalo() {
+    int etapa = 0;           // Controla qual parte do L está sendo executada
+    int contador_cima = 0;
+    int contador_direita = 0;
 
-    // =============================================
-    // 3. Movimentação da RAINHA (8 casas para a esquerda) - reaproveitado
-    // =============================================
-    printf("\n=== Movimentacao da Rainha (8 casas - esquerda) ===\n");
-    i = 0;
-    do {
-        printf("Esquerda\n");
-        i++;
-    } while (i < MOV_RAINHA);
+    printf("\n=== Movimentacao do Cavalo (1 movimento em L - 2 cima + 1 direita) ===\n");
 
-    // =============================================
-    // 4. NÍVEL AVENTUREIRO - Movimentação do CAVALO em L
-    // Movimento em L: 2 para baixo + 1 para a esquerda (repetido)
-    // Usando loops aninhados (for externo + while interno)
-    // =============================================
-    printf("\n=== Movimentacao do Cavalo (em L - 2 para baixo, 1 para esquerda) ===\n");
-
-    // Loop externo: controla quantas vezes o cavalo faz o movimento completo em L
-    for (i = 0; i < 3; i++) {  // Faz 3 movimentos em L (pode mudar se quiser mais)
-        int j = 0;
-
-        // Primeiro: 2 casas para baixo
-        while (j < MOV_CAVALO_VERTICAL) {
-            printf("Baixo\n");
-            j++;
+    while (etapa < 2) {  // 2 etapas: cima e direita
+        if (etapa == 0) {
+            // 2 casas para cima
+            for (contador_cima = 0; contador_cima < 2; contador_cima++) {
+                printf("Cima\n");
+                if (contador_cima == 1) {
+                    // Exemplo de break (interrompe após 2 casas)
+                    break;
+                }
+            }
+            etapa++;
+            continue;  // Pula direto pra próxima etapa (direita)
         }
 
-        // Depois: 1 casa para a esquerda
-        printf("Esquerda\n");
-
-        printf("--- Fim de um movimento em L ---\n");
+        if (etapa == 1) {
+            // 1 casa para a direita
+            while (contador_direita < 1) {
+                printf("Direita\n");
+                contador_direita++;
+            }
+            etapa++;
+        }
     }
 
-    printf("\nTodas as movimentacoes foram executadas com sucesso!\n");
+    printf("--- Movimento em L concluído ---\n");
+}
+
+int main() {
+    // =============================================
+    // EXECUÇÃO DAS MOVIMENTAÇÕES
+    // =============================================
+    printf("=== Movimentacao do Bispo (loops aninhados) ===\n");
+    mover_bispo_loops();
+
+    printf("\n=== Movimentacao da Torre (recursiva) ===\n");
+    mover_torre(MOV_TORRE);
+
+    printf("\n=== Movimentacao da Rainha (recursiva) ===\n");
+    mover_rainha(MOV_RAINHA);
+
+    // Movimentação do Cavalo com loops complexos
+    mover_cavalo();
+
+    printf("\nTodas as movimentações do Nível Mestre foram executadas com sucesso!\n");
 
     return 0;
 }
